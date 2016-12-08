@@ -29,4 +29,8 @@
   <color name="transparent">#00000000</color>
   <color name="viewfinder_laser">#ffcc0000</color> <!-- Android standard ICS color -->
   <color name="viewfinder_mask">#60000000</color>
+
+  <color name="guillotine_background">#444153</color>
+  <color name="guillotine_background_dark">#383547</color>
+  <color name="selected_item_color">#30d1d5</color>
 </resources>

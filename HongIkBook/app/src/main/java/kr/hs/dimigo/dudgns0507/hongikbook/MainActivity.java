@@ -1,58 +1,82 @@
 package kr.hs.dimigo.dudgns0507.hongikbook;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
+import com.yalantis.guillotine.animation.GuillotineAnimation;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+/**
+ * Created by pyh42 on 2016-12-07.
+ */
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+
+    private final static String TAG = "MainActivity";
+    private static final long RIPPLE_DURATION = 250;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        PermissionListener permissionlistener = new PermissionListener() {
-            @Override
-            public void onPermissionGranted() {
-                Toast.makeText(MainActivity.this, "Permission Granted", Toast.LENGTH_SHORT).show();
+        FrameLayout root = (FrameLayout)findViewById(R.id.root_main);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        View contentHamburger = findViewById(R.id.content_hamburger);
 
-                Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-                intent.putExtra("SCAN_MODE", "ALL");
-                startActivityForResult(intent, 0);
-            }
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setTitle(null);
+        }
 
-            @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-                Toast.makeText(MainActivity.this, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
-            }
-        };
+        View guillotineMenu = LayoutInflater.from(this).inflate(R.layout.guillotine, null);
+        root.addView(guillotineMenu);
 
-        new TedPermission(this)
-                .setPermissionListener(permissionlistener)
-                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
-                .setPermissions(Manifest.permission.CAMERA)
-                .check();
+        new GuillotineAnimation.GuillotineBuilder(guillotineMenu, guillotineMenu.findViewById(R.id.guillotine_hamburger), contentHamburger)
+                .setStartDelay(RIPPLE_DURATION)
+                .setActionBarViewForAnimation(toolbar)
+                .setClosedOnStart(true)
+                .build();
+
+        guillotineMenu.findViewById(R.id.profile_group).setOnClickListener(this);
+        guillotineMenu.findViewById(R.id.activity_group).setOnClickListener(this);
+        guillotineMenu.findViewById(R.id.feed_group).setOnClickListener(this);
+        guillotineMenu.findViewById(R.id.settings_group).setOnClickListener(this);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if(requestCode == 0) {
-            if(resultCode == Activity.RESULT_OK)
-            {
-                String contents = data.getStringExtra("SCAN_RESULT");
-                Toast.makeText(this, contents, Toast.LENGTH_SHORT).show();
-            }
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.profile_group :
+                Toast.makeText(this, "profile", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.activity_group :
+                Toast.makeText(this, "activity", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.feed_group :
+                Toast.makeText(this, "feed", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.settings_group :
+                Toast.makeText(this, "settings", Toast.LENGTH_SHORT).show();
+                break;
         }
-
-        super.onActivityResult(requestCode, resultCode, data);
     }
 }
