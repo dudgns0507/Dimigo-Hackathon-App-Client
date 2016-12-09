@@ -346,7 +346,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
     switch (item.getItemId()) {
       case R.id.menu_share:
-        intent.setClassName(this, ShareActivity.class.getName());
+        intent.setClassName(this, MainActivity.class.getName());
         startActivity(intent);
         break;
       case R.id.menu_history:

@@ -11,8 +11,7 @@
         android:layout_gravity="top"
         android:layout_width="match_parent"
         android:layout_height="@dimen/guillotine_actionbar_background_view_height"
-        android:background="@color/guillotine_background"
-        />
+        android:background="@color/guillotine_background" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,6 +36,12 @@
                 android:textSize="@dimen/guillotine_item_text_size" />
         </android.support.v7.widget.Toolbar>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/content">
+            
+        </FrameLayout>
     </LinearLayout>
 
 </FrameLayout>

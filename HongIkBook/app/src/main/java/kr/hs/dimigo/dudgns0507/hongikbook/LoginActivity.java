@@ -1,29 +1,33 @@
 package kr.hs.dimigo.dudgns0507.hongikbook;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v7.app.ActionBar;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
+import br.com.simplepass.loading_button_lib.CircularProgressButton;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,21 +41,33 @@ import retrofit2.converter.gson.GsonConverterFactory;
     Daum Api Key : 58df52473d70e2cd69b9be4c88f2a57e
  */
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, AsyncResponse {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final static String key = "be4f116f673eafce91358e46b9773540";
     private final static String search_url = "https://apis.daum.net/";
     private final static String TAG = "LoginActivity";
 
-    private ProgressDialog asyncDialog;
+    private ProgressDialog loginDialog;
+
+    @BindView(R.id.login_btn) CircularProgressButton login_btn;
+    @BindView(R.id.edit_id) EditText edit_id;
+    @BindView(R.id.edit_pw) EditText edit_pw;
+    @BindView(R.id.auto_login) CheckBox auto_login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
 
-        findViewById(R.id.scan_btn).setOnClickListener(this);
+        checkAutoLogin();
 
+        putBitmap(R.id.login_background, R.drawable.login_background, 4);
+        findViewById(R.id.login_btn).setOnClickListener(this);
+        getPermission();
+    }
+
+    private void getPermission() {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
@@ -74,102 +90,154 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.scan_btn:
-                Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-                intent.putExtra("SCAN_MODE", "ALL");
-                startActivityForResult(intent, 0);
+            case R.id.login_btn :
+                if(edit_id.getText().toString().equals("")) {
+                    Snackbar.make(findViewById(R.id.activity_login), "ID를 입력해주세요.", Snackbar.LENGTH_SHORT).show();
+                } else if(edit_pw.getText().toString().equals("")) {
+                    Snackbar.make(findViewById(R.id.activity_login), "PW를 입력해주세요.", Snackbar.LENGTH_SHORT).show();
+                } else {
+                    login_btn.startAnimation();
+                    dimigoLogin(edit_id.getText().toString(), edit_pw.getText().toString());
+                }
                 break;
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    void checkAutoLogin() {
+        SharedPreferences sp = getSharedPreferences("autoLogin", MODE_PRIVATE);
 
-        if(requestCode == 0) {
-            if(resultCode == Activity.RESULT_OK)
-            {
-                final String contents = data.getStringExtra("SCAN_RESULT");
-                searchBook(contents);
-            }
+        String userName = sp.getString("userName", null);
+        String password = sp.getString("password", null);
+
+        if(userName != null && password != null) {
+            loginDialog = new ProgressDialog(LoginActivity.this);
+            loginDialog.setMessage("로그인 중입니다..");
+            loginDialog.show();
+            dimigoLogin(userName, password);
         }
-
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void searchBook(final String contents) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(search_url)
+    void dimigoLogin(final String userName, final String password) {
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://api.dimigo.org/v1/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        BookSearch bookSearch = retrofit.create(BookSearch.class);
+        final Login login = retrofit.create(Login.class);
 
-        asyncDialog = new ProgressDialog(LoginActivity.this);
-        asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        asyncDialog.setMessage("검색중입니다...");
-
-        asyncDialog.show();
-
-        Call<BookResult> call = bookSearch.search(key, "json", contents, "isbn");
-
-        call.enqueue(new Callback<BookResult>() {
+        Call<LoginInfo> call = login.login(userName, password);
+        call.enqueue(new Callback<LoginInfo>() {
             @Override
-            public void onResponse(Call<BookResult> call, Response<BookResult> response) {
-                Log.e(TAG, response.message());
-                Log.e(TAG, response.raw().toString());
+            public void onResponse(Call<LoginInfo> call, Response<LoginInfo> response) {
+                UserData.loginInfo = response.body();
 
-                BookResult bookResult = response.body();
-
-                if(Integer.parseInt(bookResult.getChannel().getTotalCount()) >= 1) {
-                    Item result_item = bookResult.getChannel().getItem()[0];
-
-                    TextView title = (TextView) findViewById(R.id.title);
-                    title.setText("도서 : " + result_item.getTitle());
-
-                    TextView isbn = (TextView) findViewById(R.id.isbn);
-                    isbn.setText("ISBN : " + contents);
-
-                    TextView author = (TextView) findViewById(R.id.author);
-                    author.setText("저자 : " + result_item.getAuthor());
-
-                    TextView pub_date = (TextView) findViewById(R.id.pub_date);
-                    pub_date.setText("출판일 : " + result_item.getPub_date());
-
-                    TextView pub_nm = (TextView) findViewById(R.id.pub_nm);
-                    pub_nm.setText("출판사 : " + result_item.getPub_nm());
-
-                    TextView list_price = (TextView) findViewById(R.id.list_price);
-                    list_price.setText("가격 : " + result_item.getList_price());
-
-                    TextView description = (TextView) findViewById(R.id.description);
-                    description.setText("설명 : " + description.getText() + result_item.getDescription());
-
-                    Log.w(TAG, "Get Image From URL");
-                    GetImageFromUrl getImageFromUrl = new GetImageFromUrl();
-                    getImageFromUrl.delegate = LoginActivity.this;
-                    getImageFromUrl.getData(result_item.getCover_l_url());
+                if(UserData.loginInfo == null) {
+                    Snackbar.make(getWindow().getDecorView().getRootView(), "로그인에 실패했습니다.", Snackbar.LENGTH_LONG).show();
+                    login_btn.revertAnimation();
                 } else {
-                    Toast.makeText(LoginActivity.this, "도서가 없습니다.", Toast.LENGTH_SHORT).show();
-                    asyncDialog.dismiss();
+                    User user = retrofit.create(User.class);
+
+                    Call<UserInfo> call1 = user.getUser(UserData.loginInfo.getUsername());
+                    call1.enqueue(new Callback<UserInfo>() {
+                        @Override
+                        public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
+                            UserData.userInfo = response.body();
+
+                            if (UserData.userInfo == null) {
+                                Snackbar.make(getWindow().getDecorView().getRootView(), "로그인에 실패했습니다.", Snackbar.LENGTH_LONG).show();
+                                login_btn.revertAnimation();
+                            } else {
+                                if (loginDialog != null && loginDialog.isShowing())
+                                    loginDialog.dismiss();
+
+                                UserData.userInfo.setmClass(UserData.userInfo.getSerial().toString().substring(0, 1));
+
+                                Log.w(TAG, UserData.userInfo.toString());
+
+                                if (auto_login.isChecked()) {
+                                    SharedPreferences sp = getSharedPreferences("autoLogin", MODE_PRIVATE);
+                                    SharedPreferences.Editor edit = sp.edit();
+
+                                    edit.putString("userName", userName);
+                                    edit.putString("password", password);
+
+                                    edit.commit();
+                                }
+
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                finish();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<UserInfo> call, Throwable t) {
+                            Snackbar.make(getWindow().getDecorView().getRootView(), "로그인에 실패했습니다.", Snackbar.LENGTH_LONG).show();
+                            t.printStackTrace();
+                            login_btn.revertAnimation();
+                        }
+                    });
                 }
             }
 
             @Override
-            public void onFailure(Call<BookResult> call, Throwable t) {
-                Log.e(TAG ,t.getMessage());
+            public void onFailure(Call<LoginInfo> call, Throwable t) {
+                Snackbar.make(getWindow().getDecorView().getRootView(), "로그인에 실패했습니다.", Snackbar.LENGTH_LONG).show();
+                t.printStackTrace();
+                login_btn.revertAnimation();
             }
         });
     }
 
     @Override
-    public void processFinish(Bitmap output) {
-        Log.w(TAG, "process finish");
+    protected void onDestroy() {
+        super.onDestroy();
+        recycleView(R.id.login_background);
+    }
 
-        if(output != null) {
-            ImageView cover_s_url = (ImageView) findViewById(R.id.cover_s_url);
-            cover_s_url.setImageBitmap(output);
+    private void putBitmap(int imageViewId, int drawableId, int scale) {
+        ImageView imageView = (ImageView)findViewById(imageViewId);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = scale;
+
+        imageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), drawableId, options));
+    }
+
+    private void recycleView(int id) {
+        ImageView view = (ImageView)findViewById(id);
+
+        Drawable d = view.getDrawable();
+        if(d instanceof BitmapDrawable) {
+            Bitmap b = ((BitmapDrawable) d).getBitmap();
+            view.setImageBitmap(null);
+            b.recycle();
+            b = null;
         }
+        d.setCallback(null);
+        System.gc();
+        Runtime.getRuntime().gc();
+    }
 
-        asyncDialog.dismiss();
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("앱을 종료하시겠습니까?")
+                .setCancelable(false)
+                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        System.exit(0);
+                    }
+                })
+                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

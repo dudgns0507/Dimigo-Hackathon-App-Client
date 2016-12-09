@@ -16,43 +16,43 @@
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout
-        android:id="@+id/profile_group"
+        android:id="@+id/share_group"
         style="@style/LinearLayout.GuillotineItem"
         android:layout_marginTop="@dimen/guillotine_medium_margin">
 
         <ImageView
             style="@style/ImageView.GuillotineItem"
-            android:src="@drawable/ic_profile" />
+            android:src="@drawable/ic_list_white_24dp" />
 
         <TextView
             style="@style/TextView.GuillotineItem"
-            android:text="@string/profile" />
+            android:text="@string/share" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/feed_group"
+        android:id="@+id/library_group"
         style="@style/LinearLayout.GuillotineItem">
 
         <ImageView
             style="@style/ImageView.GuillotineItem"
-            android:src="@drawable/ic_feed" />
+            android:src="@drawable/ic_import_contacts_white_24dp" />
 
         <TextView
             style="@style/TextView.GuillotineItem"
-            android:text="@string/feed" />
+            android:text="@string/library" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/activity_group"
+        android:id="@+id/logout_group"
         style="@style/LinearLayout.GuillotineItem">
 
         <ImageView
             style="@style/ImageView.GuillotineItem"
-            android:src="@drawable/ic_activity_active" />
+            android:src="@drawable/ic_exit_to_app_white_24dp"/>
 
         <TextView
-            style="@style/TextView.GuillotineItem.Selected"
-            android:text="@string/activity" />
+            style="@style/TextView.GuillotineItem"
+            android:text="LOGOUT"/>
     </LinearLayout>
 
     <View

@@ -14,12 +14,13 @@
  limitations under the License.
  -->
 <resources>
-    <string name="app_name">HongIkBook</string>
+    <string name="app_name">홍익Book</string>
     <string name="app_name_up">HONGIKBOOK</string>
+    <string name="app_name_title">홍익BOOK</string>
 
-    <string name="profile">PROFILE</string>
+    <string name="share">SHARE</string>
+    <string name="library">LIBRARY</string>
     <string name="feed">FEED</string>
-    <string name="activity">ACTIVITY</string>
     <string name="settings">SETTINGS</string>
 
     <string name="app_picker_name">Applications</string>
