@@ -12,6 +12,6 @@ import retrofit2.http.Path;
  */
 
 public interface BookList {
-    @GET("books/{type}/{page}")
+    @GET("books_short/{type}/{page}")
     Call<ArrayList<BookAbb>> getBookList(@Path("type") int type, @Path("page") int page);
 }

@@ -2,6 +2,8 @@ package kr.hs.dimigo.dudgns0507.hongikbook.Fragment;
 
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -23,7 +26,10 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import kr.hs.dimigo.dudgns0507.hongikbook.Activity.InfoActivity;
+import kr.hs.dimigo.dudgns0507.hongikbook.Activity.MainActivity;
 import kr.hs.dimigo.dudgns0507.hongikbook.Data.BookAbb;
+import kr.hs.dimigo.dudgns0507.hongikbook.Interface.AsyncResponse;
 import kr.hs.dimigo.dudgns0507.hongikbook.Interface.BookList;
 import kr.hs.dimigo.dudgns0507.hongikbook.List.ListViewAdapter;
 import kr.hs.dimigo.dudgns0507.hongikbook.R;
@@ -65,6 +71,15 @@ public class ShareFragment extends Fragment {
         mAdapter = new ListViewAdapter(getContext());
         listView.setAdapter(mAdapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getContext(), InfoActivity.class);
+                intent.putExtra("id", mAdapter.getId(i));
+                startActivity(intent);
+            }
+        });
+
         refreshLayout = (SwipyRefreshLayout)view.findViewById(R.id.swipyrefreshlayout);
         refreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
             @Override
@@ -99,10 +114,12 @@ public class ShareFragment extends Fragment {
                 ArrayList<BookAbb> bookList = response.body();
 
                 linlaHeaderProgress.setVisibility(View.GONE);
-                for(int i = 0 ; i < bookList.size() ; i++) {
-                    BookAbb bookAbb = bookList.get(i);
-                    mAdapter.addItem(bookAbb.getTitle(), bookAbb.getAuthor(), bookAbb.getPublisher(), bookAbb.getRental_state(), bookAbb.getId());
-                    mAdapter.dataChange();
+                if(bookList != null) {
+                    for (int i = 0; i < bookList.size(); i++) {
+                        BookAbb bookAbb = bookList.get(i);
+                        mAdapter.addItem(bookAbb.getTitle(), bookAbb.getAuthor(), bookAbb.getPublisher(), bookAbb.getRental_state(), bookAbb.getId());
+                        mAdapter.dataChange();
+                    }
                 }
                 refreshLayout.setRefreshing(false);
             }

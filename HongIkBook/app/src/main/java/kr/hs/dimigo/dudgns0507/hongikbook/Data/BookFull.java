@@ -11,6 +11,8 @@ public class BookFull {
 
     private String rental_date;
 
+    private String image_url;
+
     private String rental_extension;
 
     private String type;
@@ -77,6 +79,14 @@ public class BookFull {
     public void setRental_extension (String rental_extension)
     {
         this.rental_extension = rental_extension;
+    }
+
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 
     public String getType ()

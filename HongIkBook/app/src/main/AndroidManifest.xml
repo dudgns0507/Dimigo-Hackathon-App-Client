@@ -24,6 +24,8 @@
 
         <activity android:name=".Activity.MainActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.InfoActivity"
+            android:screenOrientation="portrait"/>
 
         <activity android:name="com.google.zxing.client.android.CaptureActivity"
             android:screenOrientation="portrait"

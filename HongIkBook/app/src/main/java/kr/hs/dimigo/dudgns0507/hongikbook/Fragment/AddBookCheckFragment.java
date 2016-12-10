@@ -81,7 +81,7 @@ public class AddBookCheckFragment extends DialogFragment {
         price.setText("가격 : " + mArgs.getString("price"));
 
         TextView description = (TextView)view.findViewById(R.id.description);
-        description.setText("설명 : " + mArgs.getString("description"));
+        description.setText("소개 : " + mArgs.getString("description"));
 
         Button pos = (Button)view.findViewById(R.id.positive_btn);
         Button neg = (Button)view.findViewById(R.id.negative_btn);
@@ -118,6 +118,7 @@ public class AddBookCheckFragment extends DialogFragment {
                 data.put("rental_date", null);
                 data.put("rental_extension", true);
                 data.put("rental_extension_state", false);
+                data.put("image_url", mArgs.getString("image_url"));
 
                 final ProgressDialog dialog = new ProgressDialog(getContext());
                 dialog.setMessage("등록 중입니다..");

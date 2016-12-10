@@ -100,33 +100,23 @@ public class MyBookFragment extends Fragment implements AsyncResponse{
                                                         .client(okHttpClient)
                                                         .build();
 
-                                                int p = 0;
-
-                                                for (int position : reverseSortedPositions) {
-                                                    if(position >= 0) {
-                                                        p = position;
-                                                        Log.w(TAG, p + "");
-                                                    }
-                                                }
-
                                                 DeleteBook deleteBook = retrofit.create(DeleteBook.class);
-
-                                                Call<BookList> call = deleteBook.delete(p);
-                                                call.enqueue(new Callback<BookList>() {
-                                                    @Override
-                                                    public void onResponse(Call<BookList> call, Response<BookList> response) {
-                                                        for (int position : reverseSortedPositions) {
+                                                for (final int position : reverseSortedPositions) {
+                                                    Call<BookList> call = deleteBook.delete(position);
+                                                    call.enqueue(new Callback<BookList>() {
+                                                        @Override
+                                                        public void onResponse(Call<BookList> call, Response<BookList> response) {
                                                             mAdapter.remove(position);
+                                                            mAdapter.dataChange();
                                                         }
-                                                        mAdapter.dataChange();
-                                                    }
 
-                                                    @Override
-                                                    public void onFailure(Call<BookList> call, Throwable t) {
-                                                        Toast.makeText(getContext(), "로딩에 실패했습니다.", Toast.LENGTH_SHORT).show();
-                                                        t.printStackTrace();
-                                                    }
-                                                });
+                                                        @Override
+                                                        public void onFailure(Call<BookList> call, Throwable t) {
+                                                            Toast.makeText(getContext(), "로딩에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                                                            t.printStackTrace();
+                                                        }
+                                                    });
+                                                }
                                             }
                                         })
                                         .setNegativeButton("취소", new DialogInterface.OnClickListener(){
@@ -182,10 +172,12 @@ public class MyBookFragment extends Fragment implements AsyncResponse{
                 ArrayList<BookAbb> bookList = response.body();
 
                 linlaHeaderProgress.setVisibility(View.GONE);
-                for(int i = 0 ; i < bookList.size() ; i++) {
-                    BookAbb bookAbb = bookList.get(i);
-                    mAdapter.addItem(bookAbb.getTitle(), bookAbb.getAuthor(), bookAbb.getPublisher(), bookAbb.getRental_state(), bookAbb.getId());
-                    mAdapter.dataChange();
+                if(bookList != null) {
+                    for (int i = 0; i < bookList.size(); i++) {
+                        BookAbb bookAbb = bookList.get(i);
+                        mAdapter.addItem(bookAbb.getTitle(), bookAbb.getAuthor(), bookAbb.getPublisher(), bookAbb.getRental_state(), bookAbb.getId());
+                        mAdapter.dataChange();
+                    }
                 }
             }
 
@@ -226,6 +218,13 @@ public class MyBookFragment extends Fragment implements AsyncResponse{
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        cleanList();
+        addList();
+    }
+
     private void searchBook(final String contents) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(search_url)
@@ -253,7 +252,7 @@ public class MyBookFragment extends Fragment implements AsyncResponse{
                 if(Integer.parseInt(bookResult.getChannel().getTotalCount()) >= 1) {
                     result_item = bookResult.getChannel().getItem()[0];
 
-                    result_item.setIsbn13(result_item.getIsbn13().replace("&lt;b&gt;", ""));
+                    result_item.setIsbn13(result_item.getIsbn13().replace("&lt;b&gt;", "").replace("&lt;/b&gt;", ""));
 
                     Log.w(TAG, "Get Image From URL");
                     GetImageFromUrl getImageFromUrl = new GetImageFromUrl();
@@ -278,13 +277,14 @@ public class MyBookFragment extends Fragment implements AsyncResponse{
 
         Bundle args = new Bundle();
         args.putString("title", result_item.getTitle());
-        args.putString("author", result_item.getAuthor());
+        args.putString("author", result_item.getAuthor_t());
         args.putString("publisher", result_item.getPub_nm());
         args.putString("price", result_item.getList_price());
         args.putString("description", result_item.getDescription());
         args.putString("isbn", result_item.getIsbn13());
         args.putString("publication", result_item.getPub_date());
         args.putString("owner_serial", UserData.userInfo.getSerial());
+        args.putString("image_url", result_item.getCover_l_url());
 
         Log.w(TAG, result_item.toString());
 
