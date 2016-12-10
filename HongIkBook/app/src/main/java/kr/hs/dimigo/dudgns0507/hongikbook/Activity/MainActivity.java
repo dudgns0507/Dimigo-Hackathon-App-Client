@@ -1,4 +1,4 @@
-package kr.hs.dimigo.dudgns0507.hongikbook;
+package kr.hs.dimigo.dudgns0507.hongikbook.Activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,12 +11,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.yalantis.guillotine.animation.GuillotineAnimation;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import kr.hs.dimigo.dudgns0507.hongikbook.Fragment.LibraryFragment;
+import kr.hs.dimigo.dudgns0507.hongikbook.Fragment.MyBookFragment;
+import kr.hs.dimigo.dudgns0507.hongikbook.R;
+import kr.hs.dimigo.dudgns0507.hongikbook.Fragment.ShareFragment;
 
 /**
  * Created by pyh42 on 2016-12-07.
@@ -32,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @BindView(R.id.root_main) FrameLayout root;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.content_hamburger) View contentHamburger;
+    @BindView(R.id.content_search) ImageView search_btn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         guillotineMenu.findViewById(R.id.share_group).setOnClickListener(this);
         guillotineMenu.findViewById(R.id.library_group).setOnClickListener(this);
+        guillotineMenu.findViewById(R.id.mybook_group).setOnClickListener(this);
         guillotineMenu.findViewById(R.id.logout_group).setOnClickListener(this);
         guillotineMenu.findViewById(R.id.settings_group).setOnClickListener(this);
 
@@ -65,18 +72,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.share_group :
+                search_btn.setVisibility(View.VISIBLE);
                 guillotineAnimation.close();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content, new ShareFragment()).commit();
                 break;
             case R.id.library_group :
+                search_btn.setVisibility(View.VISIBLE);
                 guillotineAnimation.close();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content, new LibraryFragment()).commit();
                 break;
+            case R.id.mybook_group :
+                guillotineAnimation.close();
+                search_btn.setVisibility(View.GONE);
+                getSupportFragmentManager().beginTransaction().replace(R.id.content, new MyBookFragment()).commit();
+                break;
             case R.id.logout_group :
+                search_btn.setVisibility(View.GONE);
                 dimigoLogout();
                 break;
             case R.id.settings_group :
-                Toast.makeText(this, "settings", Toast.LENGTH_SHORT).show();
+                search_btn.setVisibility(View.GONE);
+                guillotineAnimation.close();
                 break;
         }
     }

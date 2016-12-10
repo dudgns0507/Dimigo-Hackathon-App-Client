@@ -1,4 +1,4 @@
-package kr.hs.dimigo.dudgns0507.hongikbook;
+package kr.hs.dimigo.dudgns0507.hongikbook.Data;
 
 /**
  * Created by pyh42 on 2016-11-24.

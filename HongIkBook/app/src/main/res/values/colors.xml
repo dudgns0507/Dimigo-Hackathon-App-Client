@@ -18,6 +18,11 @@
   <color name="gray">#c7c7c7</color>
   <color name="gray_alpha">#e6c7c7c7</color>
   <color name="darkGray">#75747f</color>
+  <color name="white">#ffffff</color>
+
+  <color name="green">#00FF00</color>
+  <color name="red">#DC143C</color>
+  <color name="orange">#ffb41e</color>
 
   <color name="colorPrimary">#444153</color>
   <color name="colorPrimaryDark">#383547</color>

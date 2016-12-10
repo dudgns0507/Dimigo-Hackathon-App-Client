@@ -1,17 +1,15 @@
-package kr.hs.dimigo.dudgns0507.hongikbook;
+package kr.hs.dimigo.dudgns0507.hongikbook.Util;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import kr.hs.dimigo.dudgns0507.hongikbook.Interface.AsyncResponse;
 
 /**
  * Created by pyh42 on 2016-11-24.

@@ -1,4 +1,4 @@
-package kr.hs.dimigo.dudgns0507.hongikbook;
+package kr.hs.dimigo.dudgns0507.hongikbook.Activity;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -28,6 +28,12 @@ import java.util.ArrayList;
 import br.com.simplepass.loading_button_lib.CircularProgressButton;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import kr.hs.dimigo.dudgns0507.hongikbook.Interface.Login;
+import kr.hs.dimigo.dudgns0507.hongikbook.Interface.User;
+import kr.hs.dimigo.dudgns0507.hongikbook.Data.LoginInfo;
+import kr.hs.dimigo.dudgns0507.hongikbook.R;
+import kr.hs.dimigo.dudgns0507.hongikbook.Data.UserData;
+import kr.hs.dimigo.dudgns0507.hongikbook.Data.UserInfo;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,8 +49,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private final static String key = "be4f116f673eafce91358e46b9773540";
-    private final static String search_url = "https://apis.daum.net/";
     private final static String TAG = "LoginActivity";
 
     private ProgressDialog loginDialog;
@@ -119,7 +123,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     void dimigoLogin(final String userName, final String password) {
         final Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://api.dimigo.org/v1/")
+                .baseUrl(getResources().getString(R.string.dimigo_api_url))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

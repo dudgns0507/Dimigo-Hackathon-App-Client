@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="35"
+        android:orientation="vertical"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/book_image"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:layout_marginTop="10dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="45"
+        android:layout_marginTop="10dp"
+        android:paddingBottom="10dp">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <kr.hs.dimigo.dudgns0507.hongikbook.widget.NanumBoldTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/title"
+                    android:layout_marginTop="10dp"
+                    android:text="title"
+                    android:textColor="@color/gray"
+                    android:textSize="24sp"
+                    android:maxLines="3"
+                    android:gravity="center_horizontal"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="30dp">
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="10"/>
+
+                    <kr.hs.dimigo.dudgns0507.hongikbook.widget.NanumLightTextView
+                        android:id="@+id/author"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="80"
+                        android:textSize="16sp"
+                        android:textColor="@color/gray"/>
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="10"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp">
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="10"/>
+
+                    <kr.hs.dimigo.dudgns0507.hongikbook.widget.NanumLightTextView
+                        android:id="@+id/publisher"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="80"
+                        android:textSize="16sp"
+                        android:textColor="@color/gray"/>
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="10"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp">
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="10"/>
+
+                    <kr.hs.dimigo.dudgns0507.hongikbook.widget.NanumLightTextView
+                        android:id="@+id/price"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="80"
+                        android:textSize="16sp"
+                        android:textColor="@color/gray"/>
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="10"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp">
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="10"/>
+
+                    <kr.hs.dimigo.dudgns0507.hongikbook.widget.NanumLightTextView
+                        android:id="@+id/description"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="80"
+                        android:textSize="16sp"
+                        android:textColor="@color/gray"/>
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="10"/>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="20"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+            android:text="이 책이 맞나요??"
+            android:textSize="24sp"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="10"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/positive_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="네"/>
+
+            <Button
+                android:id="@+id/negative_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="아니요"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -1,4 +1,4 @@
-package kr.hs.dimigo.dudgns0507.hongikbook;
+package kr.hs.dimigo.dudgns0507.hongikbook.Interface;
 
 import android.graphics.Bitmap;
 

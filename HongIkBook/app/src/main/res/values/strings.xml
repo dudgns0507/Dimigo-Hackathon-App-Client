@@ -18,9 +18,13 @@
     <string name="app_name_up">HONGIKBOOK</string>
     <string name="app_name_title">홍익BOOK</string>
 
+    <string name="api_url">https://dimigo-hackthon-app-server.herokuapp.com/</string>
+    <string name="dimigo_api_url">http://api.dimigo.org/v1/</string>
+
     <string name="share">SHARE</string>
     <string name="library">LIBRARY</string>
-    <string name="feed">FEED</string>
+    <string name="mybook">MYBOOK</string>
+    <string name="logout">LOGOUT</string>
     <string name="settings">SETTINGS</string>
 
     <string name="app_picker_name">Applications</string>

@@ -43,6 +43,19 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/mybook_group"
+        style="@style/LinearLayout.GuillotineItem">
+
+        <ImageView
+            style="@style/ImageView.GuillotineItem"
+            android:src="@drawable/ic_book_white_24dp" />
+
+        <TextView
+            style="@style/TextView.GuillotineItem"
+            android:text="@string/mybook" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/logout_group"
         style="@style/LinearLayout.GuillotineItem">
 
@@ -52,7 +65,7 @@
 
         <TextView
             style="@style/TextView.GuillotineItem"
-            android:text="LOGOUT"/>
+            android:text="@string/logout"/>
     </LinearLayout>
 
     <View

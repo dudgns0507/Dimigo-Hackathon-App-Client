@@ -1,5 +1,6 @@
-package kr.hs.dimigo.dudgns0507.hongikbook;
+package kr.hs.dimigo.dudgns0507.hongikbook.Interface;
 
+import kr.hs.dimigo.dudgns0507.hongikbook.Data.BookResult;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
