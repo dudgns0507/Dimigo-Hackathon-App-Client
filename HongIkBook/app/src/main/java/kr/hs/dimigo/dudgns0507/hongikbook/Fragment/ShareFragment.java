@@ -101,7 +101,7 @@ public class ShareFragment extends Fragment {
                 linlaHeaderProgress.setVisibility(View.GONE);
                 for(int i = 0 ; i < bookList.size() ; i++) {
                     BookAbb bookAbb = bookList.get(i);
-                    mAdapter.addItem(bookAbb.getTitle(), bookAbb.getAuthor(), bookAbb.getPublisher(), bookAbb.getRental_state());
+                    mAdapter.addItem(bookAbb.getTitle(), bookAbb.getAuthor(), bookAbb.getPublisher(), bookAbb.getRental_state(), bookAbb.getId());
                     mAdapter.dataChange();
                 }
                 refreshLayout.setRefreshing(false);

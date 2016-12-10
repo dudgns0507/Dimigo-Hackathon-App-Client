@@ -5,6 +5,7 @@ package kr.hs.dimigo.dudgns0507.hongikbook.List;
  */
 
 public class ListData {
+    int id;
     String title;
     String author;
     String publisher;

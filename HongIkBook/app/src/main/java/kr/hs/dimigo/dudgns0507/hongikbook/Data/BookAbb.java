@@ -5,7 +5,7 @@ package kr.hs.dimigo.dudgns0507.hongikbook.Data;
  */
 
 public class BookAbb {
-    private String id;
+    private int id;
 
     private boolean rental_state;
 
@@ -19,12 +19,12 @@ public class BookAbb {
 
     private String publisher;
 
-    public String getId ()
+    public int getId ()
     {
         return id;
     }
 
-    public void setId (String id)
+    public void setId (int id)
     {
         this.id = id;
     }

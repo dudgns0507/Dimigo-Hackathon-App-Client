@@ -46,6 +46,10 @@ public class ListViewAdapter extends BaseAdapter {
         return position;
     }
 
+    public int getId(int position) {
+        return mListData.get(position).id;
+    }
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
@@ -82,7 +86,7 @@ public class ListViewAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void addItem(String title, String author, String publisher, boolean state){
+    public void addItem(String title, String author, String publisher, boolean state, int id){
         ListData addInfo = null;
         addInfo = new ListData();
 
@@ -90,6 +94,7 @@ public class ListViewAdapter extends BaseAdapter {
         addInfo.author = author;
         addInfo.publisher = publisher;
         addInfo.state = state;
+        addInfo.id = id;
 
         mListData.add(addInfo);
     }

@@ -30,7 +30,9 @@ import kr.hs.dimigo.dudgns0507.hongikbook.Data.UserData;
 import kr.hs.dimigo.dudgns0507.hongikbook.Interface.AsyncResponse;
 import kr.hs.dimigo.dudgns0507.hongikbook.Interface.BookList;
 import kr.hs.dimigo.dudgns0507.hongikbook.Interface.BookSearch;
+import kr.hs.dimigo.dudgns0507.hongikbook.Interface.DeleteBook;
 import kr.hs.dimigo.dudgns0507.hongikbook.Interface.MyBookList;
+import kr.hs.dimigo.dudgns0507.hongikbook.List.ListData;
 import kr.hs.dimigo.dudgns0507.hongikbook.List.ListViewAdapter;
 import kr.hs.dimigo.dudgns0507.hongikbook.R;
 import kr.hs.dimigo.dudgns0507.hongikbook.Util.GetImageFromUrl;
@@ -86,10 +88,45 @@ public class MyBookFragment extends Fragment implements AsyncResponse{
                                         .setCancelable(false)
                                         .setPositiveButton("확인", new DialogInterface.OnClickListener(){
                                             public void onClick(DialogInterface dialog, int whichButton){
+
+                                                final OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                                                        .readTimeout(20, TimeUnit.SECONDS)
+                                                        .connectTimeout(20, TimeUnit.SECONDS)
+                                                        .build();
+
+                                                Retrofit retrofit = new Retrofit.Builder()
+                                                        .baseUrl(getResources().getString(R.string.api_url))
+                                                        .addConverterFactory(GsonConverterFactory.create())
+                                                        .client(okHttpClient)
+                                                        .build();
+
+                                                int p = 0;
+
                                                 for (int position : reverseSortedPositions) {
-                                                    mAdapter.remove(position);
+                                                    if(position >= 0) {
+                                                        p = position;
+                                                        Log.w(TAG, p + "");
+                                                    }
                                                 }
-                                                mAdapter.dataChange();
+
+                                                DeleteBook deleteBook = retrofit.create(DeleteBook.class);
+
+                                                Call<BookList> call = deleteBook.delete(p);
+                                                call.enqueue(new Callback<BookList>() {
+                                                    @Override
+                                                    public void onResponse(Call<BookList> call, Response<BookList> response) {
+                                                        for (int position : reverseSortedPositions) {
+                                                            mAdapter.remove(position);
+                                                        }
+                                                        mAdapter.dataChange();
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<BookList> call, Throwable t) {
+                                                        Toast.makeText(getContext(), "로딩에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                                                        t.printStackTrace();
+                                                    }
+                                                });
                                             }
                                         })
                                         .setNegativeButton("취소", new DialogInterface.OnClickListener(){
@@ -147,7 +184,7 @@ public class MyBookFragment extends Fragment implements AsyncResponse{
                 linlaHeaderProgress.setVisibility(View.GONE);
                 for(int i = 0 ; i < bookList.size() ; i++) {
                     BookAbb bookAbb = bookList.get(i);
-                    mAdapter.addItem(bookAbb.getTitle(), bookAbb.getAuthor(), bookAbb.getPublisher(), bookAbb.getRental_state());
+                    mAdapter.addItem(bookAbb.getTitle(), bookAbb.getAuthor(), bookAbb.getPublisher(), bookAbb.getRental_state(), bookAbb.getId());
                     mAdapter.dataChange();
                 }
             }
@@ -216,6 +253,8 @@ public class MyBookFragment extends Fragment implements AsyncResponse{
                 if(Integer.parseInt(bookResult.getChannel().getTotalCount()) >= 1) {
                     result_item = bookResult.getChannel().getItem()[0];
 
+                    result_item.setIsbn13(result_item.getIsbn13().replace("&lt;b&gt;", ""));
+
                     Log.w(TAG, "Get Image From URL");
                     GetImageFromUrl getImageFromUrl = new GetImageFromUrl();
                     getImageFromUrl.delegate = MyBookFragment.this;
@@ -246,6 +285,8 @@ public class MyBookFragment extends Fragment implements AsyncResponse{
         args.putString("isbn", result_item.getIsbn13());
         args.putString("publication", result_item.getPub_date());
         args.putString("owner_serial", UserData.userInfo.getSerial());
+
+        Log.w(TAG, result_item.toString());
 
         asyncDialog.dismiss();
         if(output != null) {
